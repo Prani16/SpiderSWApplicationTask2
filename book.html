@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookHub - User Profile</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .navbar {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .container {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+            <h2>Books</h2>
+			  <h2>Add a New Book</h2>
+				<form id="book-form">
+					<input type="text" id="title" placeholder="Title" required>
+					<input type="text" id="author" placeholder="Author" required>
+					<textarea id="description" placeholder="Description"></textarea>
+					<input type="number" id="published_year" placeholder="Published Year">
+					<input type="text" id="cover_image" placeholder="cover_image">
+					<button type="submit">Add Book</button>
+				</form>
+             <ul id="book-list"></ul>`;
+        <script src="bookapp.js">
+    </script>
+</body>
+</html>
