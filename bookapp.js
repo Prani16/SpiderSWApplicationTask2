@@ -1,29 +1,28 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const bookForm = document.getElementById('book-form');
-    const bookList = document.getElementById('book-list');
-});
+document.getElementById('book-form').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-const token = localStorage.getItem('jwtToken');		
-bookForm.onsubmit = function(event) {
-        event.preventDefault();
-        const book = {
-            title: document.getElementById('title').value,
-            author: document.getElementById('author').value,
-            genre: document.getElementById('published_year').value,
-			cover_image: document.getElementById('cover_image').value,
-			description: document.getElementById('description').value
-        };
-        fetch('http://localhost:3000/books', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(book)
-        })
-        .then(response => response.json())
-        .then(() => {
-            bookForm.reset();
-            loadBooks();
-        });
-    };
+    const title = document.getElementById('title').value;
+    const author = document.getElementById('author').value;
+    const genre = document.getElementById('genre').value;
+    const cover_image = document.getElementById('cover_image').value;
+    const description = document.getElementById('description').value;
+
+    fetch('http://localhost:3000/books', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title, author, genre, cover_image, description })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Book added:', data);
+        loadBooks(); // Reload the book list
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
 
 	function loadBooks() {
     fetch('http://localhost:3000/books')
@@ -96,4 +95,3 @@ function buyBook(id) {
     });
 }
 
-});

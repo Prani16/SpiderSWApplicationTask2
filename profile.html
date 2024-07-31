@@ -6,15 +6,12 @@
     <title>BookHub - User Profile</title>
     <style>
         /* Basic styling */
-        body {
+          body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             background-color: #f0f0f0;
+			width: 20%;
         }
         .container {
             background-color: white;
@@ -46,6 +43,7 @@
     </style>
 </head>
 <body>
+	<a href="main.html">Home</a>
     <div class="container">
         <h2>User Profile</h2>
         <form id="profile-form">
@@ -68,92 +66,7 @@
         </form>
     </div>
 
-    <script>
-        const token = localStorage.getItem('jwtToken');
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProfile();
-        });
-
-        async function loadProfile() {
-            const response = await fetch('/profile', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const user = await response.json();
-                document.getElementById('username').value = user.username;
-                document.getElementById('email').value = user.email;
-            } else {
-                alert('Failed to load profile');
-            }
-        }
-
-        document.getElementById('profile-form').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ username, email })
-            });
-
-            if (response.ok) {
-                alert('Profile updated successfully');
-            } else {
-                alert('Failed to update profile');
-            }
-        });
-
-        document.getElementById('password-form').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const old_password = document.getElementById('old-password').value;
-            const new_password = document.getElementById('new-password').value;
-
-            const response = await fetch('/profile/password', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ old_password, new_password })
-            });
-
-            if (response.ok) {
-                alert('Password changed successfully');
-            } else {
-                alert('Failed to change password');
-            }
-        });
-
-        document.getElementById('picture-form').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const profilePicture = document.getElementById('profile-picture').files[0];
-            const formData = new FormData();
-            formData.append('profile_picture', profilePicture);
-
-            const response = await fetch('/profile/picture', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-
-            if (response.ok) {
-                alert('Profile picture updated successfully');
-            } else {
-                alert('Failed to update profile picture');
-            }
-        });
+     <script src="user.js">
     </script>
 </body>
 </html>

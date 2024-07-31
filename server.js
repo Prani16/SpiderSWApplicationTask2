@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
 // MySQL Connection
 const db = mysql.createConnection({
     host: 'localhost',
@@ -26,30 +27,6 @@ db.connect(err => {
     console.log('MySQL Connected...');
 });
 
-// User Registration
-app.post('/register', async (req, res) => {
-    const { username, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, hashedPassword], (err, result) => {
-        if (err) throw err;
-        res.status(201).send('User registered');
-    });
-});
-
-// User Login
-app.post('/login', (req, res) => {
-    const { email, password } = req.body;
-
-    db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
-        if (err) throw err;
-        if (results.length === 0 || !(await bcrypt.compare(password, results[0].password))) {
-            return res.status(401).send('Invalid credentials');
-        }
-        const token = jwt.sign({ id: results[0].id }, 'secret', { expiresIn: '1h' });
-        res.json({ token });
-    });
-});
 
 // Middleware to Verify Token
 const verifyToken = (req, res, next) => {
@@ -63,13 +40,17 @@ const verifyToken = (req, res, next) => {
     });
 };
 
+
 // Create Book
-app.post('/books', verifyToken, (req, res) => {
+app.post('/books', (req, res) => {
     const { title, author, genre, cover_image, description } = req.body;
     
     db.query('INSERT INTO books (title, author, genre, cover_image, description) VALUES (?, ?, ?, ?, ?)', [title, author, genre, cover_image, description], (err, result) => {
-        if (err) throw err;
-        res.status(201).send('Book created');
+          if (err) {
+            res.status(500).json({ error: 'insert error' });
+            return;
+        }
+        res.status(201).json({ message: 'created successfully' });
     });
 });
 
@@ -137,6 +118,23 @@ app.get('/purchases', verifyToken, (req, res) => {
         res.json(results);
     });
 });
+
+//create user 
+
+// POST method to insert a user
+app.post('/users', (req, res) => {
+    const { username, email } = req.body;
+    const query = 'INSERT INTO users (username, email) VALUES (?, ?)';
+    connection.query(query, [username, email], (err, results) => {
+        if (err) {
+            res.status(500).json({ error: 'Database query error' });
+            return;
+        }
+        res.status(201).json({ message: 'User created', userId: results.insertId });
+    });
+});
+
+
 
 // Update User Profile
 app.put('/profile', verifyToken, (req, res) => {
